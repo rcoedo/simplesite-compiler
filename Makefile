@@ -1,6 +1,6 @@
 NAME=simplesite-compiler
 USER=rcoedo
-VERSION=0.0.2
+VERSION=0.0.3
 
 TAG=$(USER)/$(NAME):$(VERSION)
 

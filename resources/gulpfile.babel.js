@@ -31,7 +31,7 @@ const staticTask = env => () => {
 const register = env => {
   gulp.task(`styles-${env}`, stylesTask(env));
   gulp.task(`static-${env}`, staticTask(env));
-  gulp.task(env, () => sequence("clean", `static-${env}`, [`styles-${env}`]));
+  gulp.task(env, () => sequence("clean", `styles-${env}`, `static-${env}`));
 }
 
 ["dev", "prod"].forEach(env => register(env));
