@@ -18,20 +18,26 @@ const stylesTask = env => () => {
     .pipe(sass())
     .pipe(autoprefixer())
     .pipe(gulpif(env === "dev", sourcemaps.write(".")))
-    .pipe(gulp.dest(`${volume}dist/css`))
-    .pipe(gulpif(env === "dev", livereload()));
+    .pipe(gulp.dest(`${volume}dist/css`));
 };
 
 const staticTask = env => () => {
   return gulp.src(`${volume}src/static/**/*`)
-    .pipe(gulp.dest(`${volume}dist/`))
-    .pipe(gulpif(env === "dev", livereload()));
+    .pipe(gulp.dest(`${volume}dist/`));
 };
+
+gulp.task("reload", () => livereload.reload());
 
 const register = env => {
   gulp.task(`styles-${env}`, stylesTask(env));
   gulp.task(`static-${env}`, staticTask(env));
-  gulp.task(env, () => sequence("clean", `styles-${env}`, `static-${env}`));
+  gulp.task(env, () => {
+    const tasks = ["clean", `styles-${env}`, `static-${env}`];
+    if (env === "dev") {
+      tasks.push("reload");
+    }
+    sequence(...tasks);
+  });
 }
 
 ["dev", "prod"].forEach(env => register(env));
